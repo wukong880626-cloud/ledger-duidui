@@ -1,5 +1,7 @@
 # 台账对对看 · 本地原型 0.1.1
 
+**[在线试用](https://wukong880626-cloud.github.io/ledger-duidui/)** · [源代码](https://github.com/wukong880626-cloud/ledger-duidui) · [构建与部署状态](https://github.com/wukong880626-cloud/ledger-duidui/actions/workflows/pages.yml)
+
 用于两份房地产或通用明细台账的精确核对。数据仅在浏览器和本机计算线程内处理，无上传、遥测、AI API、运行时 CDN 或账号。开发与测试只使用合成数据。第二轮已修复导入耗时、重复说明膨胀、数值精度与特殊文本保真问题，详见 `第二轮验收_v0.1.1.md`。
 
 应用不上传台账，不等于托管平台没有访问日志。在线首次加载需联网，GitHub Pages 会为安全目的记录访问者 IP，详见 [隐私说明](PRIVACY.md)。发布状态和待验收项见 [发布验收](发布验收.md)。

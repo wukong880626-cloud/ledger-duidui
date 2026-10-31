@@ -3,18 +3,21 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import ExcelJS from 'exceljs';
 import JSZip from 'jszip';
 const url=process.env.LEDGER_QA_URL||'http://127.0.0.1:4175/ledger-duidui/',base=new URL(url),label=process.env.LEDGER_CHECK_LABEL||'local-subpath';
+const format=process.env.LEDGER_INPUT_FORMAT||'csv';if(!['csv','xlsx'].includes(format))throw Error('仅支持 CSV/XLSX 验收');
 if(!/^[a-z0-9-]+$/.test(label))throw Error('验收标签无效');
 await mkdir('output/publish',{recursive:true});const logs=[];
 function run(...args){const out=execFileSync(process.execPath,['node_modules/@playwright/cli/playwright-cli.js','-s=ledger-publish',...args],{encoding:'utf8',timeout:60000,maxBuffer:5*1024*1024});logs.push(out);if(out.includes('### Error'))throw Error(out);return out;}
 try{
  run('open','about:blank','--browser','chrome');
- run('run-code',`async page=>{await page.context().setOffline(false);await page.context().unroute('**/*');await page.context().addInitScript(()=>{window.__publishRequests=[];});page.context().on('request',r=>{page.__publishRequests??=[];page.__publishRequests.push({url:r.url(),method:r.method(),type:r.resourceType()});});await page.goto(${JSON.stringify(url)});}`);run('snapshot');
- run('run-code',String(async page=>{
-  await page.getByLabel('选择台账 A 文件',{exact:true}).setInputFiles('samples/异常示例_A.csv');
+ run('run-code',`async page=>{await page.context().setOffline(false);await page.context().unroute('**/*');if(page.__publishListener)page.context().off('request',page.__publishListener);page.__publishRequests=[];page.__publishListener=r=>page.__publishRequests.push({url:r.url(),method:r.method(),type:r.resourceType()});page.context().on('request',page.__publishListener);await page.goto(${JSON.stringify(url)});}`);run('snapshot');
+ run('run-code',`async page=>{
+  await page.getByLabel('选择台账 A 文件',{exact:true}).setInputFiles('samples/异常示例_A.${format}');
+  ${format==='xlsx'?"await page.getByRole('combobox',{name:'台账 A 工作表',exact:true}).selectOption({label:'销售明细'});":''}
   await page.getByRole('spinbutton',{name:'台账 A 标题行'}).fill('2');await page.getByRole('spinbutton',{name:'台账 A 标题行'}).press('Tab');
-  await page.getByLabel('选择台账 B 文件',{exact:true}).setInputFiles('samples/异常示例_B.csv');
+  await page.getByLabel('选择台账 B 文件',{exact:true}).setInputFiles('samples/异常示例_B.${format}');
+  ${format==='xlsx'?"await page.getByRole('combobox',{name:'台账 B 工作表',exact:true}).selectOption({label:'销售明细'});":''}
   await page.getByRole('button',{name:'＋ 添加主键'}).click();await page.getByRole('button',{name:'＋ 添加主键'}).click();
- }));run('snapshot');
+ }`);run('snapshot');
  run('run-code',`async page=>{
   for(const [i,l,r] of [[1,'0','4'],[2,'1','3'],[3,'2','0']]){await page.getByRole('combobox',{name:'主键 '+i+' A 列',exact:true}).selectOption(l);await page.getByRole('combobox',{name:'主键 '+i+' B 列',exact:true}).selectOption(r);}
   for(const [name,v] of [['核对字段 1 A 列','3'],['核对字段 1 B 列','2'],['核对字段 2 A 列','4'],['核对字段 2 B 列','1'],['核对字段 2 B 金额单位','万元']])await page.getByRole('combobox',{name,exact:true}).selectOption(v);
@@ -37,6 +40,6 @@ try{
   const zip=await JSZip.loadAsync(bytes);for(const entry of Object.values(zip.files))if(!entry.dir&&/\.xml$/.test(entry.name)&&/<f[ >]|<externalLink/.test(await entry.async('string')))throw Error('报告有公式或外链');
   artifacts.push({path,sheets:wb.worksheets.map(s=>s.name),differences:6,issues:7});
  }
- await writeFile(`output/publish/${label}-verification.json`,JSON.stringify({url,passed:true,realFileImport:true,offlineCompute:true,noFileUploadObserved:true,consoleErrors:0,artifacts},null,2));
- console.log(JSON.stringify({url,passed:true,realImportCompareDownload:true,offline:true,workerSubpath:base.pathname+'worker.js',requests:requests.trim()},null,2));
+ await writeFile(`output/publish/${label}-verification.json`,JSON.stringify({url,inputFormat:format,passed:true,realFileImport:true,offlineCompute:true,noFileUploadObserved:true,consoleErrors:0,artifacts},null,2));
+ console.log(JSON.stringify({url,inputFormat:format,passed:true,realImportCompareDownload:true,offline:true,workerSubpath:base.pathname+'worker.js',requests:requests.trim()},null,2));
 }finally{await writeFile(`output/publish/${label}-browser.log`,logs.join('\n'));}
