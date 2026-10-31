@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self'; style-src 'self' file:; img-src 'self' data: file:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>台账对对看 · 本机台账核对</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%231b6252'/%3E%3Cpath d='m9 21 7 7 15-16' stroke='white' fill='none' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><div class="brand"><span class="brand-icon">✓</span> 台账对对看 <span class="version">本地原型 / 0.1.1</span></div><span class="privacy"><span></span> 文件只在本机处理</span></header>
+  <main>
+    <section class="hero"><div><div class="eyebrow">让明细有据可查</div><h1>把两份台账，<em>核对清楚。</em></h1><p>选好主键与字段，找出缺项、状态和金额差异。<br>每条异常都能追溯到原始行，原表始终保留。</p></div><div class="hero-note"><span class="note-symbol">A ⇄ B</span><strong>精确匹配 · 独立报告</strong><span>不上传文件 · 无遥测 · 无 AI 判定</span></div></section>
+    <nav class="steps" aria-label="使用步骤"><span><b>1</b> 导入两份台账</span><i>→</i><span><b>2</b> 设置核对规则</span><i>→</i><span><b>3</b> 查看并导出报告</span></nav>
+    <div class="section-title"><h2>01 <span>导入台账</span></h2><div class="toolbar"><button id="demo" class="button ghost">试用合成示例</button><button id="reset" class="button text">清空本次数据</button></div></div>
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    <div class="sources"><section id="source-left" class="card source" aria-label="台账 A"></section><section id="source-right" class="card source" aria-label="台账 B"></section></div>
+    <section class="card rules" id="rules"><div class="section-title"><h2>02 <span>设置核对规则</span></h2><span id="rules-hint" class="muted">导入两份有效台账后开始配置</span></div>
+      <fieldset id="mapping" disabled><div class="rule-heading"><div><h3>主键字段</h3><p>可以组合多个字段。编号按文本精确匹配，保留前导零、大小写和空格。</p></div><button id="add-key" class="button small ghost">＋ 添加主键</button></div><div id="keys"></div>
+      <div class="rule-heading field-heading"><div><h3>核对字段</h3><p>手动映射两边的列；未选择的字段不参与核对。</p></div><button id="add-field" class="button small ghost">＋ 添加核对字段</button></div><div id="fields"></div>
+      <div class="run-bar"><label class="tolerance">金额容差 <div><input id="tolerance" type="text" inputmode="decimal" value="0.01" aria-label="金额容差（元）"><span>元</span></div><small>绝对差额 ≤ 容差视为相同；空白不等于零。</small></label><button id="run" class="button primary">开始核对 <span>→</span></button></div></fieldset>
+      <div class="scope-note">遇到重复键、缺键、非法金额或关键字段公式，会单列待处理记录，不强行匹配。公式请先在原表副本中转为值。</div>
+    </section>
+    <section id="results" hidden aria-live="polite"></section>
+    <footer><span>应用不上传台账。在线托管平台可能记录访问日志。<a href="privacy.html" target="_blank" rel="noreferrer">隐私说明</a></span><span>每份 ≤20 MB / 150,000 单元格 · 每表 ≤25,000 条 / 200 列 · 异常总计 ≤25,000 条</span></footer>
+  </main>
+</body>
+</html>

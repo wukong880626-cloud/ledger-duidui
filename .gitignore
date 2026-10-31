@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+output/playwright/.cache/
+output/
+release/
+.playwright-cli/
+.agents/
+.codex/
+.aws/
+.env*
+memory_summary.md
+*.pem
+*.key

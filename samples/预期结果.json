@@ -1,0 +1,266 @@
+{
+  "createdAt": "2026-10-22T06:57:58.978Z",
+  "config": {
+    "keys": [
+      {
+        "label": "楼栋",
+        "left": 0,
+        "right": 4
+      },
+      {
+        "label": "单元",
+        "left": 1,
+        "right": 3
+      },
+      {
+        "label": "房号",
+        "left": 2,
+        "right": 0
+      }
+    ],
+    "fields": [
+      {
+        "label": "销售状态",
+        "type": "text",
+        "left": 3,
+        "right": 2
+      },
+      {
+        "label": "合同金额",
+        "type": "amount",
+        "left": 4,
+        "right": 1,
+        "leftUnit": "元",
+        "rightUnit": "万元"
+      }
+    ],
+    "tolerance": "0.01"
+  },
+  "sources": {
+    "left": {
+      "fileName": "异常示例_A.csv",
+      "sheetName": "CSV",
+      "headerRow": 2,
+      "rowCount": 13
+    },
+    "right": {
+      "fileName": "异常示例_B.csv",
+      "sheetName": "CSV",
+      "headerRow": 1,
+      "rowCount": 10
+    }
+  },
+  "summary": {
+    "left": 13,
+    "right": 10,
+    "matched": 7,
+    "agreed": 3,
+    "changed": 4,
+    "missingLeft": 1,
+    "missingRight": 1,
+    "differenceCount": 6,
+    "issueCount": 7,
+    "invalidRows": 7,
+    "duplicateRows": 2
+  },
+  "allConsistent": false,
+  "differences": [
+    {
+      "type": "状态/文本不同",
+      "key": "楼栋=01 · 单元=1 · 房号=002",
+      "field": "销售状态",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 4,
+      "leftValue": "认购",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": 9,
+      "rightValue": "已签约",
+      "delta": "",
+      "note": "精确比较文本，保留大小写和首尾空格"
+    },
+    {
+      "type": "金额不同",
+      "key": "楼栋=01 · 单元=1 · 房号=003",
+      "field": "合同金额",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 5,
+      "leftValue": "800000",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": 8,
+      "rightValue": "80.000002",
+      "delta": "-0.02",
+      "note": "统一为元：A=800000；B=800000.02；差额=A−B；容差=0.01 元（等于容差视为相同）"
+    },
+    {
+      "type": "仅 A 有",
+      "key": "楼栋=01 · 单元=1 · 房号=004",
+      "field": "整条记录",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 6,
+      "leftValue": "[\"01\",\"1\",\"004\",\"可售\",\"700000\"]",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": "",
+      "rightValue": "",
+      "delta": "",
+      "note": "仅按主键精确匹配；请结合重复/无效记录检查可能关联项"
+    },
+    {
+      "type": "金额空值不同",
+      "key": "楼栋=01 · 单元=1 · 房号=009",
+      "field": "合同金额",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 13,
+      "leftValue": "",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": 4,
+      "rightValue": "0",
+      "delta": "",
+      "note": "空白不等于零；A 单位 元，B 单位 万元"
+    },
+    {
+      "type": "金额不同",
+      "key": "楼栋=01 · 单元=1 · 房号=011",
+      "field": "合同金额",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 15,
+      "leftValue": "100.0101",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": 2,
+      "rightValue": "0.01",
+      "delta": "0.0101",
+      "note": "统一为元：A=100.0101；B=100；差额=A−B；容差=0.01 元（等于容差视为相同）"
+    },
+    {
+      "type": "仅 B 有",
+      "key": "楼栋=01 · 单元=1 · 房号=012",
+      "field": "整条记录",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": "",
+      "leftValue": "",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": 11,
+      "rightValue": "[\"012\",\"20\",\"可售\",\"1\",\"01\"]",
+      "delta": "",
+      "note": "仅按主键精确匹配；请结合重复/无效记录检查可能关联项"
+    }
+  ],
+  "issues": [
+    {
+      "type": "复合键不完整",
+      "key": "楼栋=01 · 单元= · 房号=007",
+      "field": "主键",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 10,
+      "leftValue": "[\"01\",\"\",\"007\"]",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": "",
+      "rightValue": "",
+      "delta": "",
+      "note": "未参与匹配；请补齐全部主键分量"
+    },
+    {
+      "type": "空键",
+      "key": "楼栋= · 单元= · 房号=",
+      "field": "主键",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 11,
+      "leftValue": "[\"\",\"\",\"\"]",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": "",
+      "rightValue": "",
+      "delta": "",
+      "note": "未参与匹配；请补齐全部主键分量"
+    },
+    {
+      "type": "非法金额",
+      "key": "楼栋=01 · 单元=1 · 房号=008",
+      "field": "合同金额",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 12,
+      "leftValue": "待确认",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": "",
+      "rightValue": "",
+      "delta": "",
+      "note": "非法金额：仅接受数字、小数点、正负号及规范千位逗号"
+    },
+    {
+      "type": "重复键",
+      "key": "楼栋=01 · 单元=1 · 房号=006",
+      "field": "主键",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 8,
+      "leftValue": "[\"01\",\"1\",\"006\"]",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": "",
+      "rightValue": "",
+      "delta": "",
+      "note": "同侧共 2 条；原始行：8、9；该键两侧均不参与匹配。每条原始行在本表逐条保留"
+    },
+    {
+      "type": "重复键",
+      "key": "楼栋=01 · 单元=1 · 房号=006",
+      "field": "主键",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": 9,
+      "leftValue": "[\"01\",\"1\",\"006\"]",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": "",
+      "rightValue": "",
+      "delta": "",
+      "note": "同侧共 2 条；原始行：8、9；该键两侧均不参与匹配。每条原始行在本表逐条保留"
+    },
+    {
+      "type": "对侧记录待处理",
+      "key": "楼栋=01 · 单元=1 · 房号=008",
+      "field": "主键",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": "",
+      "leftValue": "",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": 5,
+      "rightValue": "[\"01\",\"1\",\"008\"]",
+      "delta": "",
+      "note": "对侧存在重复键或无效核对字段；未强行匹配"
+    },
+    {
+      "type": "对侧记录待处理",
+      "key": "楼栋=01 · 单元=1 · 房号=006",
+      "field": "主键",
+      "leftFile": "异常示例_A.csv",
+      "leftSheet": "CSV",
+      "leftRow": "",
+      "leftValue": "",
+      "rightFile": "异常示例_B.csv",
+      "rightSheet": "CSV",
+      "rightRow": 6,
+      "rightValue": "[\"01\",\"1\",\"006\"]",
+      "delta": "",
+      "note": "对侧存在重复键或无效核对字段；未强行匹配"
+    }
+  ]
+}

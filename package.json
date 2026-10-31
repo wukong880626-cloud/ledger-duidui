@@ -1,0 +1,24 @@
+{
+  "name": "ledger-duiduikan",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "samples": "node scripts/samples.mjs",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:browser": "node scripts/browser-check.mjs"
+  },
+  "dependencies": {
+    "decimal.js": "10.6.0",
+    "exceljs": "4.4.0",
+    "ssf": "0.11.2",
+    "jszip": "3.10.2",
+    "saxes": "5.0.1"
+  },
+  "devDependencies": {
+    "@playwright/cli": "0.1.22",
+    "esbuild": "0.28.2"
+  }
+}
